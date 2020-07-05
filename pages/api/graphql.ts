@@ -80,8 +80,12 @@ export default async (req: ServerRequest, res: ServerResponse) => {
 
   const response = await handler(req, res);
 
-  if (connection) {
-    connection.close();
+  if (connection && connection.isConnected) {
+    try {
+      await connection.close();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return response;
